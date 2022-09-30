@@ -1,11 +1,11 @@
 import Axios from "axios";
-const bcrypt = require("bcryptjs");
+import {Md5} from "ts-md5";
 const BASE_URL = "http://localhost/api"
 
 const instance = Axios.create({
     baseURL: BASE_URL
 });
-const saltRounds = 10;
+
 const LOCAL_TOKEN_KEY = "token";
 async function login(username: string, password: string) {
     let jwttoken = await instance.post("/authenticate", {
@@ -26,9 +26,7 @@ function logout() {
 
 async function register(request: RegisterRequest) {
     let password = request.passwordHash;
-    const salt = bcrypt.genSaltSync(saltRounds);
-    bcrypt.hashSync(password, salt);
-    request.passwordHash =  bcrypt.hashSync(password, salt);
+    request.passwordHash = Md5.hashStr(password);
     let response = await instance.post("/register", request);
     return response.data["data"];
 }

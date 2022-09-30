@@ -16,7 +16,7 @@ import {useRoute, useRouter} from "vue-router";
 const router = useRouter();
 const route  = useRoute();
 function handleLogout() {
-  if(route.name != "home") {
+  if(route.name != "login") {
     logout();
     router.replace({name: "login"})
   }

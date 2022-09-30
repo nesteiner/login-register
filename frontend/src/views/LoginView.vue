@@ -22,7 +22,7 @@ const password = ref("")
 
 async function handleLogin() {
   try {
-    login(username.value, password.value);
+    await login(username.value, password.value);
     router.replace({name: "home"});
   } catch (error: any) {
     alert(`fuck: $error`)
