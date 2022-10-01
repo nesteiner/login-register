@@ -41,7 +41,7 @@ async function handleSubmit() {
   } catch(error: any) {
     console.log(error)
     alert(error.data["message"])
-    if (error.status == 401) {
+    if (error.status == 401 || error.status == 400) {
       router.replace({name: "login"})
     }
   }
@@ -53,7 +53,7 @@ onMounted(async () => {
     user.value = await findUser();
     imgsrc.value = fetchImageUrl(user.value.avatar.id)
   } catch (error: any) {
-    if(error.status == 401) {
+    if(error.status == 401 || error.status == 400) {
       router.replace({name: "login"})
     }
   }

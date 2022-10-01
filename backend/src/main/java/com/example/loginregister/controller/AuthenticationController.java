@@ -11,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
@@ -42,7 +44,14 @@ public class AuthenticationController {
 
     void authenticate(@NonNull String username, @NonNull String password) throws LoginException {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            UserDetails user = userDetailsService.loadUserByUsername(username);
+            if(user == null) {
+                throw new BadCredentialsException("no such user");
+            } else {
+                // authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, "password"));
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         } catch (DisabledException exception) {
             throw new LoginException("user diabled");
         } catch (BadCredentialsException exception) { // this is for catching UsernameNotfoundException

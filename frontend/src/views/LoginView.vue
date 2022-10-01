@@ -25,7 +25,7 @@ async function handleLogin() {
     await login(username.value, password.value);
     router.replace({name: "home"});
   } catch (error: any) {
-    alert(`fuck: $error`)
+    alert(`fuck: ${error}`)
   } finally {
     password.value = "";
   }
