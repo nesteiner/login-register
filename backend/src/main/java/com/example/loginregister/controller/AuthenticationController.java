@@ -45,13 +45,14 @@ public class AuthenticationController {
     void authenticate(@NonNull String username, @NonNull String password) throws LoginException {
         try {
             UserDetails user = userDetailsService.loadUserByUsername(username);
-            if(user == null) {
-                throw new BadCredentialsException("no such user");
+
+            if(!password.equals(user.getPassword())) {
+                throw new LoginException("password error");
             } else {
-                // authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, "password"));
                 Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            
         } catch (DisabledException exception) {
             throw new LoginException("user diabled");
         } catch (BadCredentialsException exception) { // this is for catching UsernameNotfoundException
